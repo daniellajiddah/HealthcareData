@@ -53,3 +53,17 @@
         ))
     )
 )
+
+;; Register as a researcher
+(define-public (register-researcher)
+    (let
+        ((researcher tx-sender))
+        (ok (map-set researcher-registry
+            {researcher: researcher}
+            {
+                is-verified: false,
+                purchased-data: (list)
+            }
+        ))
+    )
+)
