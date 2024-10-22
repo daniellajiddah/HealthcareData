@@ -67,3 +67,17 @@
         ))
     )
 )
+
+;; Verify researcher (admin only)
+(define-public (verify-researcher (researcher principal))
+    (begin
+        (asserts! (is-eq tx-sender contract-owner) err-owner-only)
+        (ok (map-set researcher-registry
+            {researcher: researcher}
+            {
+                is-verified: true,
+                purchased-data: (default-to (list) (get purchased-data (map-get? researcher-registry {researcher: researcher})))
+            }
+        ))
+    )
+)
