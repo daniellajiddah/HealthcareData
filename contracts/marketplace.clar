@@ -109,3 +109,28 @@
         (ok true)
     )
 )
+
+;; Get data access status
+(define-read-only (get-data-access-status (researcher principal) (user principal))
+    (let
+        ((data (unwrap! (map-get? user-data-registry {user: user}) err-invalid-data)))
+        (ok (is-some (index-of (get access-control data) researcher)))
+    )
+)
+
+;; Update data availability
+(define-public (set-data-availability (available bool))
+    (let
+        ((user tx-sender)
+         (data (unwrap! (map-get? user-data-registry {user: user}) err-invalid-data)))
+        (ok (map-set user-data-registry
+            {user: user}
+            {
+                data-hash: (get data-hash data),
+                price: (get price data),
+                is-available: available,
+                access-control: (get access-control data)
+            }
+        ))
+    )
+)
